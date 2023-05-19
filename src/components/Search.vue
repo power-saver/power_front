@@ -2,6 +2,17 @@
 <template>
   <div class="search-container">
     <div class="input-container">
+      <div class="select-container">
+        <select @change="option1" v-model="metro" class="select-option">
+          <option v-for="option in metroOptions" :value="option.codeNm" :key="option.codeNm">{{ option.codeNm }}</option>
+        </select>
+        <select v-model="city" class="select-option">
+          <option v-for="option in cityOptions" :value="option.city" :key="option.city">{{ option.city }}</option>
+        </select>
+        <select v-model="cntr" class="select-option">
+          <option v-for="option in cntrOptions" :value="option.codeNm" :key="option.codeNm">{{ option.codeNm }}</option>
+        </select>
+      </div>
       <input type="text" v-model="searchTerm" placeholder="검색어를 입력하세요" @input="handleInput" />
       <button @click="handleSearch">검색</button>
     </div>
@@ -39,6 +50,9 @@
 <script>
 import axios from 'axios'
 import { Chart } from 'chart.js';
+import { cityList } from '../assets/city';
+import { metroList } from '../assets/metro';
+import { contractList } from '../assets/contract'
 
 export default {
   
@@ -48,6 +62,12 @@ export default {
   },
   data() {
     return {
+      metro: '',
+      metroOptions : metroList,
+      cityOptions: '',
+      cntrOptions: contractList,
+      city:'',
+      cntr: '',
       searchTerm: '',
       searchResults: [],
       powerUsage: {}
@@ -70,13 +90,16 @@ export default {
           myPowerUsage: this.searchTerm
         }
       }
-       
       ).then((res) => {
         this.powerUsage = res.data
         console.log(this.powerUsage)
       }).catch(error => {
           console.error('API 호출 중 오류가 발생했습니다.', error);
       });
+    },
+    option1() {
+      // this.cityOptions : cityList
+      this.cityOptions = cityList.filter(item => item.metro == this.metro);
     },
     drawChart() {
       // 차트를 그리는 로직을 구현합니다.
@@ -126,6 +149,23 @@ export default {
   align-items: center;
   width: 100%;
   max-width: 1000px;
+}
+
+.select-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.select-option {
+  height: 100%;
+  width: 110px;
+  padding: 10px;
+  margin-left: 5px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  background-color: white;
 }
 
 input {
