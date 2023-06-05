@@ -3,26 +3,34 @@
   <div class="search-container">
     <div class="input-container">
       <div class="select-container">
-        <select @change="option1" v-model="metro" class="select-option">
+        <select type="text" @change="option1" v-model="metro" class="select-option">
           <option v-for="option in metroOptions" :value="option.codeNm" :key="option.codeNm">{{ option.codeNm }}</option>
         </select>
-        <select v-model="city" class="select-option">
+        <select type="text" v-model="city" class="select-option">
           <option v-for="option in cityOptions" :value="option.city" :key="option.city">{{ option.city }}</option>
         </select>
-        <select v-model="cntr" class="select-option">
+        <select type="text" v-model="cntr" class="select-option">
           <option v-for="option in cntrOptions" :value="option.codeNm" :key="option.codeNm">{{ option.codeNm }}</option>
+        </select>
+        <select type="text" v-model="year" class="select-option">
+          <option v-for="option in yearOptions" :value="option" :key="option">{{ option }}</option>
+        </select>
+        <select type="text" v-model="month" class="select-option">
+          <option v-for="option in monthOptions" :value="option" :key="option">{{ option }}</option>
         </select>
       </div>
       <input type="text" v-model="searchTerm" placeholder="검색어를 입력하세요" @input="handleInput" />
       <button @click="handleSearch">검색</button>
     </div>
-    <div class="content-container">
+    <div class="content-container" v-if="Object.keys(responseData).length !== 0" >
       <div class="frame">
         <div class="frame-title">Frame 1</div>
         <div class="frame-content">
-          <div class="power-usage" v-if="Object.keys(powerUsage).length !== 0">
-            <p>내 전력량 : {{ powerUsage.myPower }}</p>
-            <p>평균 전력량 : {{ powerUsage.averagePower }}</p>
+          <div class="power-usage" v-if="Object.keys(responseData).length !== 0">
+            <p>내 전력량 : {{ responseData.myPower }}</p>
+            <p>평균 전력량 : {{ responseData.averagePower }}</p>
+            <p>전년도 평균 전력량 : {{ responseData.prevAveragePower }}</p>
+            <p>비율 : {{ responseData.powerRatio }}</p>
           </div>
         </div>
       </div>
@@ -53,6 +61,8 @@ import { Chart } from 'chart.js';
 import { cityList } from '../assets/city';
 import { metroList } from '../assets/metro';
 import { contractList } from '../assets/contract'
+import { monthList } from '@/assets/month';
+import { yearList } from '@/assets/year';
 
 export default {
   
@@ -62,15 +72,16 @@ export default {
   },
   data() {
     return {
-      metro: '',
       metroOptions : metroList,
       cityOptions: '',
       cntrOptions: contractList,
+      yearOptions: yearList,
+      monthOptions: monthList,
+      metro: '',
       city:'',
       cntr: '',
       searchTerm: '',
-      searchResults: [],
-      powerUsage: {}
+      responseData: {}
     };
   },
   methods: {
@@ -83,18 +94,33 @@ export default {
       // 검색 버튼 클릭 시 검색 로직을 수행하는 함수
       // 실제 검색 로직을 구현해야 합니다.
       // 검색 결과를 this.searchResults에 할당하면 템플릿에서 사용할 수 있습니다.
-
+      
       if (!this.searchTerm) return;
-      axios.get(`/api/power-usage?`, {
-        params: {
-          myPowerUsage: this.searchTerm
-        }
-      }
-      ).then((res) => {
-        this.powerUsage = res.data
-        console.log(this.powerUsage)
-      }).catch(error => {
-          console.error('API 호출 중 오류가 발생했습니다.', error);
+      let data = JSON.stringify({
+        "myPowerUsage": this.searchTerm,
+        "metro": this.metro,
+        "cntr":  this.cntr,
+        "city": this.city,
+        "year": this.year,
+        "month": this.month
+      });
+
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: '/api/power-usage',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : data
+      };
+
+      axios.request(config)
+      .then((response) => {
+        this.responseData = response.data
+      })
+      .catch((error) => {
+        console.log(error);
       });
     },
     option1() {
