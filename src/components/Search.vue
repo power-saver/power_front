@@ -22,7 +22,7 @@
       <input type="text" v-model="searchTerm" placeholder="검색어를 입력하세요" @input="handleInput" />
       <button @click="handleSearch">검색</button>
     </div>
-    <div class="content-container" v-if="Object.keys(responseData).length !== 0" >
+    <div class="content-container" v-if="Object.keys(responseData).length !== 0">
       <div class="frame">
         <div class="frame-title">Frame 1</div>
         <div class="frame-content">
@@ -35,10 +35,7 @@
         </div>
       </div>
       <div class="frame">
-        <div class="frame-title">Frame 2</div>
-        <ul class="frame-content">
-          <li v-for="result in searchResults" :key="result.id">{{ result.title }}</li>
-        </ul>
+        <Bar :data="chartData" />
       </div>
       <div class="frame">
         <div class="frame-title">Frame 3</div>
@@ -57,19 +54,20 @@
 
 <script>
 import axios from 'axios'
-import { Chart } from 'chart.js';
 import { cityList } from '../assets/city';
 import { metroList } from '../assets/metro';
 import { contractList } from '../assets/contract'
 import { monthList } from '@/assets/month';
 import { yearList } from '@/assets/year';
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
   
-  mounted() {
-    // 컴포넌트가 마운트된 후에 차트를 그립니다.
-    this.drawChart();
-  },
+  name: 'BarChart',
+  components: { Bar },
   data() {
     return {
       metroOptions : metroList,
@@ -81,7 +79,9 @@ export default {
       city:'',
       cntr: '',
       searchTerm: '',
-      responseData: {}
+      responseData: {},
+      loaded: false,
+      chartData: null
     };
   },
   methods: {
@@ -117,47 +117,28 @@ export default {
 
       axios.request(config)
       .then((response) => {
+        this.loaded = true
         this.responseData = response.data
+        this.chartData =  {
+          labels: [ '내 전력 사용량', '평균 전력사용량', '전년도 평균 전력사용량'],
+          datasets: [
+            {
+              label: this.metro + ' ' + this.city + ' ' +'전력사용량',
+              backgroundColor: '#f87979',
+              data: [response.data.myPower, response.data.averagePower, response.data.prevAveragePower]
+            }
+          ]
+        };
       })
       .catch((error) => {
         console.log(error);
+        alert('해당 데이터가 존재하지 않습니다.');
       });
     },
     option1() {
       // this.cityOptions : cityList
       this.cityOptions = cityList.filter(item => item.metro == this.metro);
     },
-    drawChart() {
-      // 차트를 그리는 로직을 구현합니다.
-      const chartCanvas = this.$refs.chartCanvas;
-
-      // API 호출을 통해 데이터를 가져옵니다.
-      // 예시 데이터
-      const chartData = {
-        labels: ['데이터1', '데이터2', '데이터3'],
-        datasets: [
-          {
-            label: '데이터셋',
-            data: [10, 20, 30],
-            backgroundColor: ['#ff6384', '#36a2eb', '#ffce56'],
-          },
-        ],
-      };
-
-      // 차트 생성
-      new Chart(chartCanvas, {
-        type: 'bar',
-        data: chartData,
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
-      });
-    }
   }
 };
 </script>
