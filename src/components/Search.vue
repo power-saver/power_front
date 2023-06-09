@@ -26,7 +26,8 @@
       
       <div class="frame">
         <Bar :data="chartData" />
-        <p>비율 : {{ responseData.powerRatio }}</p>
+        <p v-if="responseData.powerRatio >= 0" style="text-align: center;">평균대비 : {{ responseData.powerRatio}}% 사용</p>
+        <p v-if="responseData.powerRatio < 0" style="text-align: center;">평균대비 : {{ responseData.powerRatio * -1}}% 덜 사용</p>
       </div>
       <div class="frame">
         <Bar :data="chartData2" />
@@ -36,10 +37,14 @@
     <div class="content-container" v-if="Object.keys(responseData).length !== 0">
       
       <div class="frame">
-        <Bar :data="chartData3" />
+        <Pie :data="chartData3" />
       </div>
       <div class="frame">
-        <Bar :data="chartData2" />
+        <Bar :data="chartData4" />
+        <div class="power-cost">
+          <h2>내 지역 전기 요금 :</h2>
+          <h2>내 전기 요금 :</h2>
+        </div>
       </div>
     </div>
     <ul>
@@ -56,15 +61,15 @@ import { metroList } from '../assets/metro';
 import { contractList } from '../assets/contract'
 import { monthList } from '@/assets/month';
 import { yearList } from '@/assets/year';
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import { Bar, Pie } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement,  PieController } from 'chart.js'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement,  PieController)
 
 export default {
   
   name: 'BarChart',
-  components: { Bar },
+  components: { Bar, Pie },
   data() {
     return {
       metroOptions : metroList,
@@ -94,8 +99,25 @@ export default {
         datasets: [
             {
               label: '산업군별 사용량',
-              backgroundColor: '#f87979',
-              data: [213, 323, 434, 402, 239, 400,100,200]
+              backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)", 
+              "rgba(90, 192, 192, 0.2)",
+              ],
+              borderColor: [
+              "rgba(255,99,132,1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(255, 206, 86, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(153, 102, 255, 1)",
+              "rgba(255, 159, 64, 1)",
+              "rgba(90, 192, 192, 1)",
+              ],
+              data: [213, 323, 434, 402, 239, 400 ,100]
             }
           ] 
       }
@@ -146,6 +168,24 @@ export default {
             } 
           ]
         };
+        this.chartData2 = {
+          labels: [],
+          datasets: [
+            {
+              label: this.year + '년 ' + this.month +"월 상위 5개 도시의 전력사용량",
+            }
+          ]
+        };
+        this.chartData4 =  {
+          labels : response.data.neighborCityList.map(neighborCity => neighborCity.name),
+          datasets: [
+            {
+              label : this.metro + " "+this.city + ' 인접지역 전력사용량',
+              backgroundColor: '#f87979',
+              data: response.data.neighborCityList.map(neighborCity => neighborCity.averagePower)
+            } 
+          ]
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -160,6 +200,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+
 .search-container {
   display: flex;
   flex-direction: column;
@@ -168,6 +209,10 @@ export default {
   font-family: 'Jua', sans-serif;
 }
 
+.power-cost {
+  padding-left: px;
+  padding-top: 100px;
+}
 .input-container {
   display: flex;
   align-items: center;
@@ -208,7 +253,6 @@ button {
   border-radius: 4px;
   cursor: pointer;
 }
-
 .content-container {
   display: flex;
   margin-top: 20px;

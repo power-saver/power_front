@@ -345,10 +345,6 @@ export const cityList = [
         },
         {
             "metro": "경기도",
-            "city": "안산시 상록구"
-        },
-        {
-            "metro": "경기도",
             "city": "과천시"
         },
         {
@@ -421,10 +417,6 @@ export const cityList = [
         },
         {
             "metro": "경기도",
-            "city": "용인시 처인구"
-        },
-        {
-            "metro": "경기도",
             "city": "안성시"
         },
         {
@@ -437,39 +429,7 @@ export const cityList = [
         },
         {
             "metro": "경기도",
-            "city": "안산시 단원구"
-        },
-        {
-            "metro": "경기도",
-            "city": "부천시 원미구"
-        },
-        {
-            "metro": "경기도",
-            "city": "부천시 소사구"
-        },
-        {
-            "metro": "경기도",
-            "city": "부천시 오정구"
-        },
-        {
-            "metro": "경기도",
-            "city": "부천시 남구"
-        },
-        {
-            "metro": "경기도",
             "city": "성남시"
-        },
-        {
-            "metro": "경기도",
-            "city": "성남시 수정구"
-        },
-        {
-            "metro": "경기도",
-            "city": "성남시 중원구"
-        },
-        {
-            "metro": "경기도",
-            "city": "성남시 분당구"
         },
         {
             "metro": "경기도",
@@ -477,31 +437,7 @@ export const cityList = [
         },
         {
             "metro": "경기도",
-            "city": "수원시 장안구"
-        },
-        {
-            "metro": "경기도",
-            "city": "수원시 권선구"
-        },
-        {
-            "metro": "경기도",
-            "city": "수원시 팔달구"
-        },
-        {
-            "metro": "경기도",
-            "city": "수원시 영통구"
-        },
-        {
-            "metro": "경기도",
             "city": "안양시"
-        },
-        {
-            "metro": "경기도",
-            "city": "안양시 만안구"
-        },
-        {
-            "metro": "경기도",
-            "city": "안양시 동안구"
         },
         {
             "metro": "경기도",
@@ -509,27 +445,7 @@ export const cityList = [
         },
         {
             "metro": "경기도",
-            "city": "고양시 덕양구"
-        },
-        {
-            "metro": "경기도",
-            "city": "고양시 일산동구"
-        },
-        {
-            "metro": "경기도",
-            "city": "고양시 일산서구"
-        },
-        {
-            "metro": "경기도",
             "city": "용인시"
-        },
-        {
-            "metro": "경기도",
-            "city": "용인시 기흥구"
-        },
-        {
-            "metro": "경기도",
-            "city": "용인시 수지구"
         },
         {
             "metro": "경기도",
@@ -657,23 +573,7 @@ export const cityList = [
         },
         {
             "metro": "충청북도",
-            "city": "청주시 상당구"
-        },
-        {
-            "metro": "충청북도",
-            "city": "청주시 흥덕구"
-        },
-        {
-            "metro": "충청북도",
             "city": "증평군"
-        },
-        {
-            "metro": "충청북도",
-            "city": "청주시 청원구"
-        },
-        {
-            "metro": "충청북도",
-            "city": "청주시 서원구"
         },
         {
             "metro": "충청북도",
@@ -698,14 +598,6 @@ export const cityList = [
         {
             "metro": "충청남도",
             "city": "서산시"
-        },
-        {
-            "metro": "충청남도",
-            "city": "천안시 동남구"
-        },
-        {
-            "metro": "충청남도",
-            "city": "천안시 서북구"
         },
         {
             "metro": "충청남도",
@@ -810,14 +702,6 @@ export const cityList = [
         {
             "metro": "전라북도",
             "city": "전주시"
-        },
-        {
-            "metro": "전라북도",
-            "city": "전주시 덕진구"
-        },
-        {
-            "metro": "전라북도",
-            "city": "전주시 완산구"
         },
         {
             "metro": "전라북도",
@@ -1009,14 +893,6 @@ export const cityList = [
         },
         {
             "metro": "경상북도",
-            "city": "포항시 남구"
-        },
-        {
-            "metro": "경상북도",
-            "city": "포항시 북구"
-        },
-        {
-            "metro": "경상북도",
             "city": "미분류"
         },
         {
@@ -1026,10 +902,6 @@ export const cityList = [
         {
             "metro": "경상남도",
             "city": "창원시"
-        },
-        {
-            "metro": "경상남도",
-            "city": "창원시 진해구"
         },
         {
             "metro": "경상남도",
@@ -1098,42 +970,6 @@ export const cityList = [
         {
             "metro": "경상남도",
             "city": "울산시"
-        },
-        {
-            "metro": "경상남도",
-            "city": "울산시 북구"
-        },
-        {
-            "metro": "경상남도",
-            "city": "울산시 동구"
-        },
-        {
-            "metro": "경상남도",
-            "city": "울산시 중구"
-        },
-        {
-            "metro": "경상남도",
-            "city": "울산시 남구"
-        },
-        {
-            "metro": "경상남도",
-            "city": "울산시 울주군"
-        },
-        {
-            "metro": "경상남도",
-            "city": "창원시 마산합포구"
-        },
-        {
-            "metro": "경상남도",
-            "city": "창원시 마산회원구"
-        },
-        {
-            "metro": "경상남도",
-            "city": "창원시 의창구"
-        },
-        {
-            "metro": "경상남도",
-            "city": "창원시 성산구"
         },
         {
             "metro": "경상남도",

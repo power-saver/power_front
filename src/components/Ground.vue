@@ -3,7 +3,7 @@
     <Header/>
     <Search/>
     <Footer/>
-</div>
+  </div>
 </template>
 
 <script>  
