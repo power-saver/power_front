@@ -23,26 +23,23 @@
       <button @click="handleSearch">검색</button>
     </div>
     <div class="content-container" v-if="Object.keys(responseData).length !== 0">
-      <div class="frame">
-        <div class="frame-title">Frame 1</div>
-        <div class="frame-content">
-          <div class="power-usage" v-if="Object.keys(responseData).length !== 0">
-            <p>내 전력량 : {{ responseData.myPower }}</p>
-            <p>평균 전력량 : {{ responseData.averagePower }}</p>
-            <p>전년도 평균 전력량 : {{ responseData.prevAveragePower }}</p>
-            <p>비율 : {{ responseData.powerRatio }}</p>
-          </div>
-        </div>
-      </div>
+      
       <div class="frame">
         <Bar :data="chartData" />
+        <p>비율 : {{ responseData.powerRatio }}</p>
       </div>
       <div class="frame">
-        <div class="frame-title">Frame 3</div>
-        <div class="frame-content">
-        <canvas ref="chartCanvas"></canvas>
-        </div>
-        <!-- Add your content for the third frame here -->
+        <Bar :data="chartData2" />
+      </div>
+     
+    </div>
+    <div class="content-container" v-if="Object.keys(responseData).length !== 0">
+      
+      <div class="frame">
+        <Bar :data="chartData3" />
+      </div>
+      <div class="frame">
+        <Bar :data="chartData2" />
       </div>
     </div>
     <ul>
@@ -81,7 +78,27 @@ export default {
       searchTerm: '',
       responseData: {},
       loaded: false,
-      chartData: null
+      chartData: null,
+      chartData2: {
+          labels: [ '서울특별시 종로구', '청주시 서원구', '서울특별시 중구', '부산광역시 사직동', '서울특별시 이태원'],
+          datasets: [
+            {
+              label: '상위 5개 도시의 전력사용량',
+              backgroundColor: '#f87979',
+              data: [500, 500, 500, 400, 300, 400]
+            }
+          ]
+        },
+      chartData3 : {
+        labels: ['주택용', '일반용', '교육용','산업용','농사용','가로등','심야'],
+        datasets: [
+            {
+              label: '산업군별 사용량',
+              backgroundColor: '#f87979',
+              data: [213, 323, 434, 402, 239, 400,100,200]
+            }
+          ] 
+      }
     };
   },
   methods: {
@@ -126,7 +143,7 @@ export default {
               label: this.metro + ' ' + this.city + ' ' +'전력사용량',
               backgroundColor: '#f87979',
               data: [response.data.myPower, response.data.averagePower, response.data.prevAveragePower]
-            }
+            } 
           ]
         };
       })
@@ -204,6 +221,10 @@ button {
   border-radius: 4px;
   margin-right: 10px;
 }
+// flex: 1 1 50%; /* Each frame occupies 50% width, up to 2 frames per row */
+//   border: 1px solid #ccc;
+//   border-radius: 4px;
+//   margin: 10px;
 
 .frame-title {
   background-color: #f8f8f8;
