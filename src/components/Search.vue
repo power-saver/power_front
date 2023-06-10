@@ -22,29 +22,30 @@
       <input type="text" v-model="searchTerm" placeholder="검색어를 입력하세요" @input="handleInput" />
       <button @click="handleSearch">검색</button>
     </div>
+
     <div class="content-container" v-if="Object.keys(responseData).length !== 0">
-      
       <div class="frame">
         <Bar :data="chartData" />
-        <p v-if="responseData.powerRatio >= 0" style="text-align: center;">평균대비 : {{ responseData.powerRatio}}% 사용</p>
-        <p v-if="responseData.powerRatio < 0" style="text-align: center;">평균대비 : {{ responseData.powerRatio * -1}}% 덜 사용</p>
+        <p v-if="responseData.powerRatio >= 0" style="text-align: center; padding-top: 20px;">평균대비 {{parseInt(responseData.powerRatio)}}% 사용</p>
+        <p v-if="responseData.powerRatio < 0" style="text-align: center; padding-top: 20px;">평균대비 {{parseInt(responseData.powerRatio * -1)}}% 덜 사용</p>
       </div>
       <div class="frame">
-        <Bar :data="chartData2" />
+        <Bar :data="chartData2"/>
       </div>
-     
     </div>
+
     <div class="content-container" v-if="Object.keys(responseData).length !== 0">
-      
-      <div class="frame">
+      <div class="frame-pie" style="height: 550px; align-items: center;">
         <Pie :data="chartData3" />
       </div>
-      <div class="frame">
+      <div class="frame" >
         <Bar :data="chartData4" />
-        <div class="power-cost">
-          <h2>내 지역 전기 요금 :</h2>
-          <h2>내 전기 요금 :</h2>
-        </div>
+      </div>
+    </div>
+    <div class="content-container" v-if="Object.keys(responseData).length !== 0">
+      <div class="frame" >
+        <h3 style="text-align: center; font-weight: bold;">내 지역 전기 요금 : {{parseInt(responseData.myCityCost)}}원</h3>
+        <h3 style="text-align: center; font-weight: bold;">나의 예상 전기 요금 : {{responseData.myCost}}원</h3>
       </div>
     </div>
     <ul>
@@ -84,43 +85,6 @@ export default {
       responseData: {},
       loaded: false,
       chartData: null,
-      chartData2: {
-          labels: [ '서울특별시 종로구', '청주시 서원구', '서울특별시 중구', '부산광역시 사직동', '서울특별시 이태원'],
-          datasets: [
-            {
-              label: '상위 5개 도시의 전력사용량',
-              backgroundColor: '#f87979',
-              data: [500, 500, 500, 400, 300, 400]
-            }
-          ]
-        },
-      chartData3 : {
-        labels: ['주택용', '일반용', '교육용','산업용','농사용','가로등','심야'],
-        datasets: [
-            {
-              label: '산업군별 사용량',
-              backgroundColor: [
-              "rgba(255, 99, 132, 0.2)",
-              "rgba(54, 162, 235, 0.2)",
-              "rgba(255, 206, 86, 0.2)",
-              "rgba(75, 192, 192, 0.2)",
-              "rgba(153, 102, 255, 0.2)",
-              "rgba(255, 159, 64, 0.2)", 
-              "rgba(90, 192, 192, 0.2)",
-              ],
-              borderColor: [
-              "rgba(255,99,132,1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)",
-              "rgba(75, 192, 192, 1)",
-              "rgba(153, 102, 255, 1)",
-              "rgba(255, 159, 64, 1)",
-              "rgba(90, 192, 192, 1)",
-              ],
-              data: [213, 323, 434, 402, 239, 400 ,100]
-            }
-          ] 
-      }
     };
   },
   methods: {
@@ -162,17 +126,65 @@ export default {
           labels: [ '내 전력 사용량', '평균 전력사용량', '전년도 평균 전력사용량'],
           datasets: [
             {
-              label: this.metro + ' ' + this.city + ' ' +'전력사용량',
-              backgroundColor: '#f87979',
-              data: [response.data.myPower, response.data.averagePower, response.data.prevAveragePower]
+              label: this.metro + ' ' + this.city + ' ' +'전력사용량', 
+              backgroundColor: [
+              'rgba(255, 99, 132, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(255, 206, 86, 0.6)',
+              'rgba(75, 192, 192, 0.6)',
+              'rgba(153, 102, 255, 0.6)',
+              'rgba(255, 159, 64, 0.6)',
+              'rgba(100, 100, 100, 0.6)',
+              ],
+              data: [response.data.myPower, response.data.averagePower, response.data.prevAveragePower],
+              barPercentage: 0.5, // Adjust the bar width (default is 0.9)
+              categoryPercentage: 0.8, // Adjust the space between bars (default is 0.8)
             } 
           ]
         };
         this.chartData2 = {
-          labels: [],
+          labels: response.data.topCityList.map(topCity => topCity.name),
           datasets: [
             {
               label: this.year + '년 ' + this.month +"월 상위 5개 도시의 전력사용량",
+              backgroundColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)',
+              'rgba(100, 100, 100, 1)',
+              ],
+              data: response.data.neighborCityList.map(topCity => topCity.averagePowerUsage),
+              barPercentage: 0.6, // Adjust the bar width (default is 0.9)
+              categoryPercentage: 0.8, // Adjust the space between bars (default is 0.8)
+            }
+          ]
+        };
+        this.chartData3 = {
+          labels: response.data.cntrList.map(cntrList => cntrList.name),
+          datasets: [
+            {
+              backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(100, 100, 100, 0.2)',
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(100, 100, 100, 1)',
+              ],
+              data: response.data.cntrList.map(cntrList => cntrList.averagePowerUsage),
             }
           ]
         };
@@ -181,11 +193,21 @@ export default {
           datasets: [
             {
               label : this.metro + " "+this.city + ' 인접지역 전력사용량',
-              backgroundColor: '#f87979',
-              data: response.data.neighborCityList.map(neighborCity => neighborCity.averagePower)
+              backgroundColor: [
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
+              'rgba(255, 206, 86, 0.8)',
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(153, 102, 255, 0.8)',
+              'rgba(255, 159, 64, 0.8)',
+              'rgba(100, 100, 100, 0.8)',
+              ],
+              data: response.data.neighborCityList.map(neighborCity => neighborCity.averagePowerUsage),
+              barPercentage: 0.6, // Adjust the bar width (default is 0.9)
+              categoryPercentage: 0.8, // Adjust the space between bars (default is 0.8)
             } 
           ]
-        }
+        };
       })
       .catch((error) => {
         console.log(error);
@@ -206,7 +228,8 @@ export default {
   flex-direction: column;
   align-items: center;
   padding: 30px;
-  font-family: 'Jua', sans-serif;
+  font-family: "sans-serif";
+  font-weight: bold;
 }
 
 .power-cost {
@@ -264,6 +287,15 @@ button {
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-right: 10px;
+}
+.frame-pie{
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 // flex: 1 1 50%; /* Each frame occupies 50% width, up to 2 frames per row */
 //   border: 1px solid #ccc;
