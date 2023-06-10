@@ -156,7 +156,7 @@ export default {
               'rgba(255, 159, 64, 1)',
               'rgba(100, 100, 100, 1)',
               ],
-              data: response.data.neighborCityList.map(topCity => topCity.averagePowerUsage),
+              data: response.data.topCityList.map(topCity => topCity.averagePowerUsage),
               barPercentage: 0.6, // Adjust the bar width (default is 0.9)
               categoryPercentage: 0.8, // Adjust the space between bars (default is 0.8)
             }
